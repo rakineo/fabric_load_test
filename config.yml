@@ -1,0 +1,96 @@
+server_uri: neo4j://3.86.237.103:7687
+admin_user: "neo4j"
+admin_pass: "neo123"
+times_to_run: 1
+parallel: false
+
+queries:
+    qry#1r :
+        type: read
+        cql: |
+            USE legand.graphA 
+            WITH "qry#1r" as query, "read" as exec_type, "movies1" as DB
+            MATCH (a) RETURN a LIMIT 1;
+    qry#1w :
+        type: write
+        cql: |
+            USE legand.graphA 
+            WITH "qry#1w" as query, "write" as exec_type, "movies1" as DB
+            MERGE (a:Movie{name:"Legand"});
+    qry#1u :
+        type: write
+        cql: |
+            USE legand.graphA 
+            WITH "qry#1u" as query, "update" as exec_type, "movies1" as DB
+            MATCH (a:Movie{name:"Legand"}) SET a.update=true;
+    qry#2r :
+        type: read
+        cql: |
+            USE legand.graphB
+            WITH "qry#2r" as query, "read" as exec_type, "movies2" as DB
+            MATCH (a) RETURN a LIMIT 1;
+    qry#2w :
+        type: write
+        cql: |
+            USE legand.graphB
+            WITH "qry#2w" as query, "write" as exec_type, "movies2" as DB
+            MERGE (a:Movie{name:"Legand"});
+    qry#2u :
+        type: write
+        cql: |
+            USE legand.graphB 
+            WITH "qry#2u" as query, "update" as exec_type, "movies2" as DB
+            MATCH (a:Movie{name:"Legand"}) SET a.update=true;
+    qry#3r :
+        type: read
+        cql: |
+            USE legand.graphC 
+            WITH "qry#3r" as query, "read" as exec_type, "movies3" as DB
+            MATCH (a) RETURN a LIMIT 1;
+    qry#3w :
+        type: write
+        cql: |
+            USE legand.graphC 
+            WITH "qry#3w" as query, "write" as exec_type, "movies3" as DB
+            MERGE (a:Movie{name:"Legand"});
+    qry#3u :
+        type: write
+        cql: |
+            USE legand.graphC 
+            WITH "qry#3u" as query, "update" as exec_type, "movies3" as DB
+            MATCH (a:Movie{name:"Legand"}) SET a.update=true;
+    qry#123r :
+        type: read
+        cql: |
+            USE legand.graphA MATCH (n:Movie) RETURN n.title,n.db,"movies1" as db,"qry#123r" as type LIMIT 5
+            UNION 
+            USE legand.graphB MATCH (n:Movie) RETURN n.title,n.db,"movies2" as db,"qry#123r" as type LIMIT 5
+            UNION
+            USE legand.graphC MATCH (n:Movie) RETURN n.title,n.db,"movies3"as db,"qry#123r" as type LIMIT 5;
+    qry#123rv2 :
+        type: read
+        cql: |
+            call {
+                USE legand.graphA
+                MATCH (a) WITH a limit 1
+                return a, apoc.static.get("cluster.clue") AS value 
+                }
+                RETURN * ;
+    qry#1rb :
+        type: rollback
+        cql: |
+            USE legand.graphA
+            WITH "qry#1rb" as query, "rollback" as exec_type, "movies1" as DB
+            MATCH (a:Movie{name:"Legand2"}) SET a.update=true;
+    qry#2rb :
+        type: rollback
+        cql: |
+            USE legand.graphB
+            WITH "qry#3u" as query, "rollback" as exec_type, "movies2" as DB
+            MATCH (a:Movie{name:"Legand2"}) SET a.update=true;
+    qry#3rb :
+        type: rollback
+        cql: |
+            USE legand.graphC 
+            WITH "qry#3u" as query, "rollback" as exec_type, "movies3" as DB
+            MATCH (a:Movie{name:"Legand2"}) SET a.update=true;

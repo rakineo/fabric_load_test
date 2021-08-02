@@ -1,0 +1,11 @@
+name: load_test
+channels:
+  - conda-forge
+dependencies:
+  - python=3.9.2
+  - pytest=6.2.2
+  - pandas=1.2.3
+  - numpy=1.20.1
+  - pyaml=20.4.0
+  - neo4j-python-driver=4.3.3
+  - matplotlib
