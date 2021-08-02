@@ -14,6 +14,11 @@ import datetime
 import sys, os
 import time
 
+class InvalidTemperature(Exception):
+  def __init__(self):
+    pass
+  def __str__(self):
+    return f'Intentional exception to create scenario for Rollback'
 
 def timer(func):
     """Print the runtime of the decorated function"""
@@ -27,12 +32,12 @@ def timer(func):
         end_time = time.perf_counter()      # 2
         run_time = end_time - start_time    # 3
         try:
-            doc_string=args[0]
+            doc_string=args[1]
         except:
             doc_string="'NO ARGS'"
         logging.info(f"Finished {func.__name__!r} with {doc_string} in {run_time:.4f} secs.")
         try:
-            namespace=args[2]
+            namespace=args[4]
             metrics=namespace.metrics_df
             namespace.metrics_df=metrics.append({"function_name":f"{func.__name__!r}","step_name":doc_string,"time_in_seconds":f"{run_time:.4f}"}, ignore_index=True)
         except:
@@ -76,7 +81,7 @@ def db_connector(func):
 
 @timer
 @db_connector
-def run_cypher(doc_string,query_type,queries,ns,neo_driver=None,config=None):
+def run_cypher(database,doc_string,query_type,queries,ns,neo_driver=None,config=None):
     """
     Run raw cypher queries.
     """
@@ -87,30 +92,30 @@ def run_cypher(doc_string,query_type,queries,ns,neo_driver=None,config=None):
 
     if type(queries)==list:
         # print("Processing List of Queries")
-        with neo_driver.session(database="legand",default_access_mode=default_access_mode) as session:
+        with neo_driver.session(database=database,default_access_mode=default_access_mode) as session:
             for query in queries:
                 # print(f"\n **** Running \n {query}")
                 try:
                     tx = session.begin_transaction()
                     tx.run(query)
                     if query_type == 'rollback':
-                        raise
+                        tx.rollback()
+                        raise InvalidTemperature()
                     tx.commit()
                     tx.close()
                 except Exception as e:
                     logging.error(e)
                     print(e)
+                    print("Transaction Rollback is getting triggered.")
                     tx.rollback()
                     tx.close()
     else:
-        with neo_driver.session(database="legand",default_access_mode=default_access_mode) as session:
-            # print("Processing Single Query")
-            # print(f"\n **** Running \n {queries}")
+        with neo_driver.session(database=database,default_access_mode=default_access_mode) as session:
             tx = session.begin_transaction()
             try:
                 result=tx.run(queries)
                 if query_type == 'rollback':
-                    raise
+                    raise InvalidTemperature()
                 tx.commit()
                 tx.close()
             except Exception as e:
@@ -164,10 +169,10 @@ def main():
     num_processors = 10 #mp.cpu_count()
     no_of_tasks=len(tasks)
     times_to_run=config['times_to_run']
-    
+    database=config['database']
     if process_type:
         exec_tasks=list(tasks)*times_to_run
-        prep_tasks = [[run_cypher,task,config['queries'][task]['type'],config['queries'][task]['cql'],ns] for task in exec_tasks ]
+        prep_tasks = [[run_cypher,database,task,config['queries'][task]['type'],config['queries'][task]['cql'],ns] for task in exec_tasks ]
         if len(prep_tasks)>0:
             with mp.Pool(num_processors) as pool:
                 task_submit(prep_tasks,pool)
@@ -175,7 +180,7 @@ def main():
     else:
         print(f"Running tasks in sequential order.")
         exec_tasks = [task for task in tasks for i in range(0,times_to_run)  ]
-        prep_tasks = [[run_cypher,task,config['queries'][task]['type'],config['queries'][task]['cql'],ns] for task in exec_tasks ]
+        prep_tasks = [[run_cypher,database,task,config['queries'][task]['type'],config['queries'][task]['cql'],ns] for task in exec_tasks ]
         task_submit(prep_tasks)
     metrics_df=ns.metrics_df
     metrics_df.to_csv(metrics_output_file_name, index=False)
