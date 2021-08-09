@@ -1,1 +1,5 @@
 *.csv
+.vscode
+.DS_Store
+testing_load.xlsx
+*.xlsx
