@@ -93,7 +93,7 @@ def run_cypher(database,doc_string,query_type,queries,ns,neo_driver=None,config=
 
     if type(queries)==list:
         # print("Processing List of Queries")
-        with neo_driver.session(database=database,default_access_mode=default_access_mode) as session:
+        with neo_driver.session(default_access_mode=default_access_mode) as session:
             tx = session.begin_transaction()
             try:
                 for query in queries:
@@ -111,7 +111,7 @@ def run_cypher(database,doc_string,query_type,queries,ns,neo_driver=None,config=
                 tx.rollback()
                 tx.close()
     else:
-        with neo_driver.session(database=database,default_access_mode=default_access_mode) as session:
+        with neo_driver.session(default_access_mode=default_access_mode) as session:
             tx = session.begin_transaction()
             try:
                 result=tx.run(queries)

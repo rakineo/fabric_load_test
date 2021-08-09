@@ -1,0 +1,51 @@
+# server_uri: neo4j://3.86.237.103:7687
+server_uri: neo4j://3.86.237.103:7687
+database: "legend"
+admin_user: "neo4j"
+admin_pass: "neo123"
+times_to_run: 1
+parallel: false
+
+queries:
+    qry#5STa1:
+        type: write
+        cql: 
+            - USE legend.graphA CREATE (m:Movie {title:"A movie"}) 
+                SET m.released="2006",
+                m.tagline="Break The Codes",
+                m.createdBy="rkp",
+                m.db="movies1"; 
+            - USE legend.graphA MATCH (m:Movie {title:"A movie"}) SET m.createdON=date(); 
+            - USE legend.graphA MATCH (m:Movie {title:"A movie"}) REMOVE m.createdBy; 
+            - USE legend.graphA CREATE (m:Movie {title:"B movie"}) 
+                SET m.released="2008",
+                m.tagline="Break in",
+                m.createdBy="rkp",
+                m.db="movies1"
+                CREATE (p:Person {name:"test user1"})
+                MERGE (p)-[:ACTED_IN]->(m);
+            - USE legend.graphA 
+                MATCH (m:Movie {title:"A movie"})
+                MATCH (p:Person {name:"test user1"})
+                MERGE (p)-[:ACTED_IN]->(m);
+    qry#5STa2:
+        type: write
+        cql: 
+            - USE legend.graphB 
+                CREATE (m:Movie {title:"A movie"}) 
+                SET m.released="2006",
+                m.tagline="Break The Codes",
+                m.createdBy="rkp",
+                m.db="movies1"; 
+            - MATCH (m:Movie {title:"A movie"}) SET m.createdON=date(); 
+            - MATCH (m:Movie {title:"A movie"}) REMOVE m.createdBy; 
+            - CREATE (m:Movie {title:"B movie"}) 
+                SET m.released="2008",
+                m.tagline="Break in",
+                m.createdBy="rkp",
+                m.db="movies1"
+                CREATE (p:Person {name:"test user1"})
+                MERGE (p)-[:ACTED_IN]->(m);
+            - MATCH (m:Movie {title:"A movie"})
+                MATCH (p:Person {name:"test user1"})
+                MERGE (p)-[:ACTED_IN]->(m);
