@@ -15,3 +15,33 @@ Attempted to access graph legend.graphB
 2021-08-09 19:31:03,871 [INFO] Running with sequential
 2021-08-09 19:31:06,762 [INFO] Finished 'run_cypher' with qry#5w in 2.8907 secs.
 2021-08-09 19:31:06,837 [INFO] Finished 'main' with 'NO ARGS' in 3.4662 secs.
+2021-08-10 08:47:06,080 [INFO] Running with sequential
+2021-08-10 08:47:06,757 [INFO] Finished 'run_cypher' with qry#1r in 0.6756 secs.
+2021-08-10 08:47:07,934 [INFO] Finished 'run_cypher' with qry#1w in 1.1693 secs.
+2021-08-10 08:47:08,746 [INFO] Finished 'run_cypher' with qry#1u in 0.8077 secs.
+2021-08-10 08:47:09,214 [INFO] Finished 'run_cypher' with qry#2r in 0.4629 secs.
+2021-08-10 08:47:09,899 [INFO] Finished 'run_cypher' with qry#2w in 0.6793 secs.
+2021-08-10 08:47:10,597 [INFO] Finished 'run_cypher' with qry#2u in 0.6781 secs.
+2021-08-10 08:47:11,310 [INFO] Finished 'run_cypher' with qry#3r in 0.7071 secs.
+2021-08-10 08:47:12,232 [INFO] Finished 'run_cypher' with qry#3w in 0.9169 secs.
+2021-08-10 08:47:12,863 [INFO] Finished 'run_cypher' with qry#3u in 0.6250 secs.
+2021-08-10 08:47:13,264 [ERROR] {code: Neo.ClientError.Statement.SyntaxError} {message: Multiple graphs in the same query not allowed here. This feature is only available in a Fabric database.
+Attempted to access graph legend.graphB
+"USE legend.graphB MATCH (n:Movie) RETURN n.title,n.db,"movies2" as db,"qry#123r" as type LIMIT 5"
+ ^}
+2021-08-10 08:50:43,016 [INFO] Running with sequential
+2021-08-10 08:50:44,014 [INFO] Finished 'run_cypher' with qry#1r in 0.9963 secs.
+2021-08-10 08:50:44,700 [INFO] Finished 'run_cypher' with qry#1w in 0.6769 secs.
+2021-08-10 08:50:45,362 [INFO] Finished 'run_cypher' with qry#1u in 0.6568 secs.
+2021-08-10 08:50:46,111 [INFO] Finished 'run_cypher' with qry#2r in 0.7431 secs.
+2021-08-10 08:50:46,788 [INFO] Finished 'run_cypher' with qry#2w in 0.6723 secs.
+2021-08-10 08:50:47,723 [INFO] Finished 'run_cypher' with qry#2u in 0.9290 secs.
+2021-08-10 08:50:48,393 [INFO] Finished 'run_cypher' with qry#3r in 0.6645 secs.
+2021-08-10 08:50:49,054 [INFO] Finished 'run_cypher' with qry#3w in 0.6557 secs.
+2021-08-10 08:50:49,710 [INFO] Finished 'run_cypher' with qry#3u in 0.6515 secs.
+2021-08-10 08:50:50,301 [ERROR] {code: Neo.ClientError.Statement.SyntaxError} {message: Multiple graphs in the same query not allowed here. This feature is only available in a Fabric database.
+Attempted to access graph legend.graphB
+"USE legend.graphB MATCH (n:Movie) RETURN n.title,n.db,"movies2" as db,"qry#123r" as type LIMIT 5"
+ ^}
+2021-08-10 08:58:16,290 [INFO] Running with sequential
+2021-08-10 08:58:35,619 [INFO] Running with sequential

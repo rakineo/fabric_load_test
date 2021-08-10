@@ -1,0 +1,25 @@
+# server_uri: neo4j://3.86.237.103:7687
+# server_uri: neo4j://3.86.237.103:7687
+server_uri: neo4j://neo4j-fabric-fd1ea9373ea3d7e7.elb.us-east-1.amazonaws.com:7687
+database: "legend.graphA"
+admin_user: "neo4j"
+admin_pass: "neo123"
+times_to_run: 1
+parallel: false
+
+queries:
+    qry#1w :
+        type: write
+        cql: |
+            WITH "qry#1w" as query, "write" as exec_type, "movies1" as DB
+            MERGE (a:Movie{name:"legend.graphA"});
+    qry#123rv2 :
+        type: read
+        cql: |
+            call {
+                MATCH (a) WITH a limit 1
+                return a, apoc.static.get("cluster.clue") AS value 
+                }
+                RETURN * ;
+
+    

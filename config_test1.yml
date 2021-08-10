@@ -1,6 +1,6 @@
 # server_uri: neo4j://3.86.237.103:7687
-server_uri: neo4j://3.86.237.103:7687
-# server_uri: neo4j://rkpFabricInternetLB-486145107.us-east-1.elb.amazonaws.com:7687
+# server_uri: neo4j://3.86.237.103:7687
+server_uri: neo4j://neo4j-fabric-fd1ea9373ea3d7e7.elb.us-east-1.amazonaws.com:7687
 database: "legend"
 admin_user: "neo4j"
 admin_pass: "neo123"
