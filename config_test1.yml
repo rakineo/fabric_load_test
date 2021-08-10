@@ -8,29 +8,63 @@ times_to_run: 1
 parallel: false
 
 queries:
-    qry#1w :
+    # qry#1w :
+    #     type: write
+    #     cql: |
+    #         USE legend.graphA 
+    #         LOAD CSV WITH HEADERS FROM 'https://gist.githubusercontent.com/jexp/054bc6baf36604061bf407aa8cd08608/raw/8bdd36dfc88381995e6823ff3f419b5a0cb8ac4f/orders.csv' AS row 
+    #         MERGE (order:Order {orderID: row.OrderID}) ON CREATE SET order.shipName = row.ShipName;
+    # qry#4w :
+    #     type: write
+    #     cql: |
+    #         LOAD CSV WITH HEADERS FROM 'https://gist.githubusercontent.com/jexp/054bc6baf36604061bf407aa8cd08608/raw/8bdd36dfc88381995e6823ff3f419b5a0cb8ac4f/orders.csv' AS row 
+    #             CALL {
+    #             WITH row
+    #             USE legend.graphB
+    #             MERGE (order:Order {orderID: row.OrderID}) ON CREATE SET order.shipName = row.ShipName
+    #             RETURN "Success"
+    #         }
+    #         RETURN *;
+
+    # qry#2w :
+    #     type: write
+    #     cql: |
+    #         LOAD CSV WITH HEADERS FROM 'file:///orders.csv' AS row
+    #         CALL {
+    #             WITH row
+    #             USE legend.graphB
+    #             MERGE (order:Order {orderID: row.OrderID}) ON CREATE SET order.shipName = row.ShipName
+    #             RETURN "Success"
+    #         }
+    #         RETURN *;
+
+    qry#5w :
         type: write
         cql: |
-            USE legend.graphA 
-            LOAD CSV WITH HEADERS FROM 'https://gist.githubusercontent.com/jexp/054bc6baf36604061bf407aa8cd08608/raw/8bdd36dfc88381995e6823ff3f419b5a0cb8ac4f/orders.csv' AS row MERGE (order:Order {orderID: row.OrderID}) ON CREATE SET order.shipName = row.ShipName;
-    qry#2w :
-        type: write
-        cql: |
+            USE legend.graphB
             LOAD CSV WITH HEADERS FROM 'file:///orders.csv' AS row
-            CALL {
                 WITH row
-                USE legend.graphB
                 MERGE (order:Order {orderID: row.OrderID}) ON CREATE SET order.shipName = row.ShipName
                 RETURN "Success"
-            }
-            RETURN *;
-    qry#3w :
+
+    # qry#3w :
+    #     type: write
+    #     cql: |
+    #         USE legend.graphC
+    #         WITH [["Vins et alcools Chevalier","10248"],
+    #         ["Wans et  Chevalier","10249"],["Vins et alcools Chevalier","10300"],["Toms Spezialitäten","10250"]]
+    #         AS orders
+    #         UNWIND orders as row
+    #         MERGE (order:Order {orderID: row[1]})
+    #         ON CREATE SET order.shipName = row[0]; 
+
+        # qry#6w :
         type: write
         cql: |
+            UNWIND [["Vins et alcools Chevalier","10248"],
+            ["Wans et  Chevalier","10249"],["Vins et alcools Chevalier","10300"],["Toms Spezialitäten","10250"]] as row
             USE legend.graphC
-            WITH [["Vins et alcools Chevalier","10248"],
-            ["Wans et  Chevalier","10249"],["Vins et alcools Chevalier","10300"],["Toms Spezialitäten","10250"]]
-            AS orders
-            UNWIND orders as row
+
+            
             MERGE (order:Order {orderID: row[1]})
             ON CREATE SET order.shipName = row[0]; 
