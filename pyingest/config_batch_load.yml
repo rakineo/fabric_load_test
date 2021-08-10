@@ -1,0 +1,56 @@
+# server_uri: neo4j://3.86.237.103
+server_uri: neo4j://neo4j-fabric-fd1ea9373ea3d7e7.elb.us-east-1.amazonaws.com:7687
+admin_user: neo4j
+admin_pass: neo123
+database: legend
+files:
+  # - url: /Users/appletest/myneoworkspace/fabric_load_test/pyingest/movies2.csv
+  #   field_sep: ','
+  #   cql: |
+  #     UNWIND $dict.rows as row
+  #     CALL {
+  #       WITH row
+  #       USE legend.graphB
+  #       MERGE (m:Movie {title:row.title}) SET m.tagline=row.tagline,m.released=row.released,m.hint="3test8.1"
+  #       MERGE (p:Person {name:row.name}) SET p.born=row.born,p.hint="3test8.1"
+  #       MERGE (p)-[:ACTED_IN]->(m)
+  #       RETURN "Success"
+  #     }
+  #     RETURN *
+  - url: /Users/appletest/myneoworkspace/fabric_load_test/pyingest/movies2.csv
+    field_sep: ','
+    cql: |
+      USE legend.graphB
+      UNWIND $dict.rows as row
+      MERGE (m:Movie {title:row.title}) SET m.tagline=row.tagline,m.released=row.released,m.hint="3test8.4"
+      MERGE (p:Person {name:row.name}) SET p.born=row.born,p.hint="3test8.4"
+      MERGE (p)-[:ACTED_IN]->(m)
+      RETURN "Success"
+  # - url: /Users/appletest/myneoworkspace/fabric_load_test/pyingest/movies3.csv
+  #   field_sep: ','
+  #   cql: |
+  #     UNWIND $dict.rows as row
+  #     WITH row,custom.get_shard_db(row.title) as db_code
+  #     CALL {
+  #     WITH row,db_code 
+  #     USE legend.graph(db_code)
+  #     MERGE (m:Movie {title:row.title}) SET m.tagline=row.tagline,m.released=row.released,m.hint="3sharding1"
+  #     MERGE (p:Person {name:row.name}) SET p.born=row.born,p.hint="3sharding1"
+  #     MERGE (p)-[:ACTED_IN]->(m)
+  #     RETURN "Success"
+  #     }
+  #     RETURN *
+    # - url: /Users/appletest/myneoworkspace/fabric_load_test/pyingest/movies2.csv
+    #   field_sep: ','
+    #   cql: |
+    #     UNWIND $dict.rows as row
+    #     WITH row,custom.get_shard_db(row.title) as db_code
+    #     CALL {
+    #     WITH row,db_code 
+    #     USE legend.graph(db_code)
+    #     MERGE (m:Movie {title:row.title}) SET m.tagline=row.tagline,m.released=row.released,m.hint="3sharding2"
+    #     MERGE (p:Person {name:row.name}) SET p.born=row.born,p.hint="3sharding2"
+    #     MERGE (p)-[:ACTED_IN]->(m)
+    #     RETURN "Success"
+    #     }
+    #     RETURN *
